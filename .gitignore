@@ -5,6 +5,7 @@
 
 /build
 /out
+# src/Config.h
 
 # User-specific files
 *.rsuser
