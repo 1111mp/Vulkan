@@ -10,6 +10,11 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
+configure_file (
+  "${PROJECT_SOURCE_DIR}/HazelConfig.h.in"
+  "${PROJECT_SOURCE_DIR}/src/Config.h"
+)
+
 function(assign_source_group)
   foreach(_source IN ITEMS ${ARGN})
     if (IS_ABSOLUTE "${_source}")
@@ -30,6 +35,8 @@ function(my_add_executable)
   add_executable(${ARGV})
 endfunction(my_add_executable)
 
+add_subdirectory("Thirdparty")
+
 file(GLOB_RECURSE ${PROJECT_NAME}_HEADER_FILES src/*.h *.hpp)
 file(GLOB_RECURSE ${PROJECT_NAME}_SOURCE_FILES src/*.cpp)
 
@@ -42,8 +49,11 @@ find_package(Vulkan REQUIRED)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${Vulkan_INCLUDE_DIR}
+  "Thirdparty/GLFW/include"
+  "Thirdparty/glm"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   ${Vulkan_LIBRARIES}
+  glfw
 )
