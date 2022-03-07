@@ -51,9 +51,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   ${Vulkan_INCLUDE_DIR}
   "Thirdparty/GLFW/include"
   "Thirdparty/glm"
+  "Thirdparty/stb_image"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   ${Vulkan_LIBRARIES}
   glfw
+  stb_image
 )
