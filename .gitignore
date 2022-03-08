@@ -6,6 +6,7 @@
 /build
 /out
 src/Config.h
+/.vscode/
 
 # User-specific files
 *.rsuser
