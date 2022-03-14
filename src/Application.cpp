@@ -342,6 +342,8 @@ private:
 			endSingleTimeCommands(commandBuffer, m_ImGuiCommandPool);
 			ImGui_ImplVulkan_DestroyFontUploadObjects();
 		}
+
+		m_Dset = ImGui_ImplVulkan_AddTexture(m_TextureSampler, m_TextureImageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 	}
 
 	void mainLoop()
@@ -356,6 +358,13 @@ private:
 
 			static bool show_demo_window = true;
 			ImGui::ShowDemoWindow(&show_demo_window);
+
+			ImGui::Begin("Viewport");
+
+			ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+			ImGui::Image(m_Dset, ImVec2{viewportPanelSize.x, viewportPanelSize.y});
+
+			ImGui::End();
 
 			ImGuiIO &io = ImGui::GetIO();
 			ImGui::Render();
@@ -393,7 +402,7 @@ private:
 		vkDestroyImage(m_Device, m_TextureImage, nullptr);
 		vkFreeMemory(m_Device, m_TextureImageMemory, nullptr);
 
-		vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
+		// vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
 		vkDestroyDescriptorPool(m_Device, m_ImGuiDescriptorPool, nullptr);
 
 		vkDestroyDescriptorSetLayout(m_Device, m_DescriptorSetLayout, nullptr);
@@ -926,6 +935,8 @@ private:
 			vkDestroyBuffer(m_Device, m_UniformBuffers[i], nullptr);
 			vkFreeMemory(m_Device, m_UniformBuffersMemory[i], nullptr);
 		}
+
+		vkDestroyDescriptorPool(m_Device, m_DescriptorPool, nullptr);
 	}
 
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory)
@@ -2075,6 +2086,8 @@ private:
 
 	uint32_t currentFrame = 0;
 	uint32_t m_ImageCount = 2;
+
+	VkDescriptorSet m_Dset;
 
 public:
 	bool m_FramebufferResized = false;
