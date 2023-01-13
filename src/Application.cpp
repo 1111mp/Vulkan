@@ -38,7 +38,7 @@ const std::vector<const char *> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"};
 
 //�����豸��չ���б�
-const std::vector<const char *> deviceExtensions = {
+std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 #ifdef NDEBUG
@@ -709,6 +709,11 @@ private:
 		glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);*/
 
 		auto extensions = getRequiredExtensions();
+#ifdef __APPLE__
+		extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+		extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+		createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
 
 		createInfo.enabledExtensionCount = extensions.size();
 		createInfo.ppEnabledExtensionNames = extensions.data();
@@ -798,6 +803,9 @@ private:
 		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
 		createInfo.pQueueCreateInfos = queueCreateInfos.data();
 
+#ifdef __APPLE__
+		deviceExtensions.push_back("VK_KHR_portability_subset");
+#endif
 		createInfo.pEnabledFeatures = &deviceFeatures;
 		createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
